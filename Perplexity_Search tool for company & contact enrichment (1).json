@@ -1,0 +1,331 @@
+{
+  "name": "Perplexity/Search tool for company & contact enrichment",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1u99muRnm7_NPijDuW0aPSsUsPSdpD0a0Ogbom_MpWCs",
+          "mode": "list",
+          "cachedResultName": "Perplexity/Search tool for company & contact enrichment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1u99muRnm7_NPijDuW0aPSsUsPSdpD0a0Ogbom_MpWCs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1u99muRnm7_NPijDuW0aPSsUsPSdpD0a0Ogbom_MpWCs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "LinkedIn URL": "={{ $json.LinkedIn_URL }}",
+            "Status": "done ",
+            "Company Name": "={{ $('Read_Prospect_Data').item.json['Company Name'] }}",
+            "Website": "={{ $json.LinkedIn_URL }}"
+          },
+          "matchingColumns": [
+            "Company Name"
+          ],
+          "schema": [
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Industry",
+              "displayName": "Industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LinkedIn URL",
+              "displayName": "LinkedIn URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        384,
+        16
+      ],
+      "id": "609d4e96-d131-47a9-a475-d6ad34dfc91b",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "cMrWHOaAEbuYF9nM",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1u99muRnm7_NPijDuW0aPSsUsPSdpD0a0Ogbom_MpWCs",
+          "mode": "list",
+          "cachedResultName": "Perplexity/Search tool for company & contact enrichment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1u99muRnm7_NPijDuW0aPSsUsPSdpD0a0Ogbom_MpWCs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1u99muRnm7_NPijDuW0aPSsUsPSdpD0a0Ogbom_MpWCs/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -400,
+        -80
+      ],
+      "id": "9f11082e-5c2b-43c8-a543-06e80bbd03f6",
+      "name": "Read_Prospect_Data",
+      "credentials": {
+        "googleApi": {
+          "id": "cMrWHOaAEbuYF9nM",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "85939cdb-f3cf-4cc1-9a10-bc865a7cdfb6",
+              "name": "Company_Website",
+              "value": "={{ $json.organic_results[0] }}",
+              "type": "object"
+            },
+            {
+              "id": "1e951f56-c264-4f68-ba1f-9171a92fb28a",
+              "name": "LinkedIn_URL",
+              "value": "={{ $json.organic_results[0].link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        0
+      ],
+      "id": "a30c353c-1904-4f45-88c4-fd5c0fa2bbdd",
+      "name": "Format_Search_Results"
+    },
+    {
+      "parameters": {
+        "url": "https://serpapi.com/search.json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json[\"Company Name\"] }} official LinkedIn profile"
+            },
+            {
+              "name": "api_key",
+              "value": "1fbc86f8f1ef692f05c8fc1c8332b17288abe1bc21b4e167cf2a616bfad7e542"
+            },
+            {
+              "name": "engine",
+              "value": "google"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -48,
+        -64
+      ],
+      "id": "e87784a6-d5bc-487f-96ed-9d31639828d3",
+      "name": "SerpApi_LinkedIn_Search1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2fb97558-45fd-4269-a577-1dc255c155f7",
+              "leftValue": "={{ $json.Status }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -272,
+        128
+      ],
+      "id": "ba2acf75-2658-4cdd-919c-c9b5806eab91",
+      "name": "Check_Pending_Status"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -656,
+        -80
+      ],
+      "id": "e0928693-ee8b-4daf-ae6d-c4f8f281aa00",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Read_Prospect_Data": {
+      "main": [
+        [
+          {
+            "node": "Check_Pending_Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format_Search_Results": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpApi_LinkedIn_Search1": {
+      "main": [
+        [
+          {
+            "node": "Format_Search_Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check_Pending_Status": {
+      "main": [
+        [
+          {
+            "node": "SerpApi_LinkedIn_Search1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read_Prospect_Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "837d0a3e-094c-48c1-ad32-a18b52060720",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8a9f38a589bf8c79010d7f97a5a6b5a7b528add4b4b9786d31af68ceabcae97b"
+  },
+  "id": "0DvOcrahDh4Mwr3s",
+  "tags": []
+}
